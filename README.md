@@ -18,7 +18,7 @@ A high-performance, mobile-responsive web-based code editor designed for student
 * **Piston API** for remote code execution.[cite: 1]
 
 ## 🚀 Live Demo
-[আপনার লাইভ লিঙটি এখানে দিন]
+[https://mahdi2774.github.io/SSNICIDE/]
 
 
 
