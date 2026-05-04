@@ -1,4 +1,5 @@
 #যদি app আকারে ব্যাবহার করতে চাউ তাহলে ডানে বা নিছে দেখো releases লেখা এর নিছে app ache এইখানে ক্লিক করলেই app download হইতে শুরু করবো । আর পারলে একটা স্টার দিয়ে দিতে পারো তাহলে অনেক উপকার হবে । আড় যদি pc টে বাঃ leptop এ ব্যাবহার করতে চাউ তাহলে নিছে দেখ ওয়েবসাইট এর লিঙ্ক দেয়া আছে ।
+Please tap on the star.
 
 # SSNICIDE
 A gift from me only for SSNICIAN.
