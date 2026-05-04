@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>SSNICIDE by IncognitoM</title>
+    <style>
+        :root {
+            --bg-color: #1e1e1e;
+            --panel-bg: #252526;
+            --text-color: #d4d4d4;
+            --border-color: #333;
+            --accent-color: #007acc;
+            --accent-hover: #005f9e;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            overflow: hidden;
+        }
+
+        /* Header & Toolbar */
+        header {
+            background-color: #333333;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--accent-color);
+            box-sizing: border-box;
+        }
+
+        /* Redesigned Logo */
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #fff;
+            letter-spacing: 1px;
+            line-height: 1;
+        }
+
+        .logo span {
+            color: var(--accent-color);
+            font-size: 0.45em; /* Smaller font */
+            display: block;    /* Puts it under SSNICIDE */
+            margin-top: 4px;
+            letter-spacing: 1.5px;
+            font-weight: normal;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        select, button {
+            background-color: #3c3c3c;
+            color: #fff;
+            border: 1px solid #555;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+            outline: none;
+        }
+
+        button {
+            background-color: var(--accent-color);
+            border-color: var(--accent-color);
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Main Workspace Layout */
+        .workspace {
+            display: flex;
+            height: calc(100% - 60px);
+            flex-direction: row;
+        }
+
+        .editor-container {
+            width: 50%;
+            height: 100%;
+            border-right: 2px solid var(--border-color);
+            position: relative;
+        }
+
+        .output-container {
+            width: 50%;
+            height: 100%;
+            background-color: #ffffff;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .output-header {
+            background-color: var(--panel-bg);
+            color: #aaa;
+            padding: 5px 10px;
+            font-size: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        /* Output Elements */
+        #live-preview {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background-color: #fff;
+        }
+
+        #console-output {
+            width: 100%;
+            height: 100%;
+            background-color: #1e1e1e;
+            color: #00ff00;
+            padding: 10px;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            display: none;
+            margin: 0;
+        }
+        
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            display: none;
+            background: rgba(0,0,0,0.8);
+            padding: 10px 20px;
+            border-radius: 5px;
+        }
+
+        /* MOBILE / ANDROID COMPATIBILITY */
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 10px 15px;
+            }
+            .controls {
+                margin-top: 12px;
+                width: 100%;
+                justify-content: space-between;
+                flex-wrap: wrap;
+            }
+            .controls span {
+                display: none;
+            }
+            select, button {
+                flex: 1;
+                margin: 0;
+                font-size: 13px;
+                padding: 10px;
+            }
+            select { margin-right: 5px; }
+            button { margin-left: 5px; }
+            
+            .workspace {
+                flex-direction: column;
+                height: calc(100% - 95px);
+            }
+            .editor-container {
+                width: 100%;
+                height: 50%;
+                border-right: none;
+                border-bottom: 3px solid var(--accent-color);
+            }
+            .output-container {
+                width: 100%;
+                height: 50%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            SSNICIDE
+            <span>BY INCOGNITOM</span>
+        </div>
+        <div class="controls">
+            <span>Language:</span>
+            <select id="language-select" onchange="changeLanguage()">
+                <option value="html">Web (HTML) - Live</option>
+                <option value="c">C++ (Error free)</option>
+                <option value="python">Python 3</option>
+            </select>
+            <button id="run-btn" onclick="runCode()">Run / Refresh</button>
+        </div>
+    </header>
+
+    <div class="workspace">
+        <div class="editor-container" id="editor"></div>
+        <div class="output-container">
+            <div class="output-header" id="output-title">Live Preview</div>
+            <iframe id="live-preview"></iframe>
+            <pre id="console-output"></pre>
+            <div id="loading-spinner" class="loading">Compiling & Running...</div>
+        </div>
+    </div>
+
+    <!-- Monaco Editor Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs/loader.min.js"></script>
+    <script>
+        const templates = {
+            html: `<!DOCTYPE html>\n<html>\n<head>\n  <title>Practice Web</title>\n</head>\n<body>\n  <!-- Try typing a new tag like <h1> below! -->\n  <center>\n    <h1>Su Sagotom</h1>\n    <font color="red">Eida amader boi er niyome banaichi Error asbo na Insaallah</font>\n  </center>\n  \n</body>\n</html>`,
+            c: `// Standard BD Textbook Format\n#include <stdio.h>\n#include <conio.h>\n\nvoid main() {\n    clrscr();\n    \n    printf("Hello World!\\n");\n    \n    getch();\n}`,
+            python: `print("Welcome to SSNICIDE Python!")\nfor i in range(1, 6):\n    print(f"Counting: {i}")`
+        };
+
+        let editor;
+
+        require.config({ paths: { 'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.36.1/min/vs' } });
+        require(['vs/editor/editor.main'], function() {
+            
+            // Set up HTML Language configuration for proper Enter-key indentation
+            monaco.languages.setLanguageConfiguration('html', {
+                onEnterRules:[
+                    {
+                        beforeText: /<([a-zA-Z0-9\-]+)(?:[^>]*[^\/])?>$/,
+                        afterText: /^<\/([a-zA-Z0-9\-]+)>/,
+                        action: { indentAction: monaco.languages.IndentAction.IndentOutdent }
+                    }
+                ]
+            });
+
+            editor = monaco.editor.create(document.getElementById('editor'), {
+                value: templates['html'],
+                language: 'html',
+                theme: 'vs-dark',
+                automaticLayout: true,
+                autoClosingBrackets: "always",
+                autoClosingQuotes: "always",
+                autoIndent: "full",
+                formatOnType: true,
+                suggestOnTriggerCharacters: true,
+                minimap: { enabled: window.innerWidth > 768 }
+            });
+
+            // ==========================================
+            // CUSTOM AUTO-CLOSING TAGS FIX
+            // ==========================================
+            editor.onDidChangeModelContent((e) => {
+                if (e.changes.length !== 1) return; // Ignore large pastes or undo/redo
+                
+                const change = e.changes[0];
+                
+                // If the user typed a closing bracket '>'
+                if (change.text === '>') {
+                    const pos = editor.getPosition();
+                    const textUntilCursor = editor.getModel().getLineContent(pos.lineNumber).substring(0, pos.column - 1);
+                    
+                    // Match the opening tag right before the cursor
+                    const match = textUntilCursor.match(/<([a-zA-Z0-9\-]+)(?:[^>]*[^\/])?>$/);
+                    
+                    if (match) {
+                        const tag = match[1].toLowerCase();
+                        
+                        // Ignore self-closing (void) HTML elements
+                        const voidElements =['area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input', 'link', 'meta', 'param', 'source', 'track', 'wbr'];
+                        
+                        if (!voidElements.includes(tag)) {
+                            // Automatically insert the closing tag
+                            const closingTag = `</${tag}>`;
+                            editor.executeEdits("auto-close-tag",[{
+                                range: new monaco.Range(pos.lineNumber, pos.column, pos.lineNumber, pos.column),
+                                text: closingTag,
+                                forceMoveMarkers: true
+                            }]);
+                            // Move the cursor back between the opening and closing tag
+                            editor.setPosition(pos);
+                        }
+                    }
+                }
+                
+                // Live HTML Preview Trigger
+                const lang = document.getElementById('language-select').value;
+                if (lang === 'html') {
+                    clearTimeout(window.typingTimer);
+                    window.typingTimer = setTimeout(updateLivePreview, 500);
+                }
+            });
+
+            updateLivePreview();
+        });
+
+        function changeLanguage() {
+            const lang = document.getElementById('language-select').value;
+            const previewIframe = document.getElementById('live-preview');
+            const consolePre = document.getElementById('console-output');
+            const outputTitle = document.getElementById('output-title');
+
+            if (lang === 'html') {
+                previewIframe.style.display = 'block';
+                consolePre.style.display = 'none';
+                outputTitle.innerText = "Live Preview";
+                monaco.editor.setModelLanguage(editor.getModel(), 'html');
+                editor.setValue(templates['html']);
+                updateLivePreview();
+            } else {
+                previewIframe.style.display = 'none';
+                consolePre.style.display = 'block';
+                consolePre.innerText = "Output will appear here after you click 'Run / Refresh'...";
+                outputTitle.innerText = "Console Output";
+                monaco.editor.setModelLanguage(editor.getModel(), lang);
+                editor.setValue(templates[lang]);
+            }
+        }
+
+        function updateLivePreview() {
+            const code = editor.getValue();
+            const previewFrame = document.getElementById('live-preview');
+            const previewDoc = previewFrame.contentDocument || previewFrame.contentWindow.document;
+            previewDoc.open();
+            previewDoc.write(code);
+            previewDoc.close();
+        }
+
+        function patchTextbookCode(code, lang) {
+            if (lang === 'c') {
+                let patched = code;
+                patched = patched.replace(/#include\s*<conio\.h>/gi, '// auto-removed conio.h');
+                patched = patched.replace(/clrscr\(\)\s*;/gi, '/* auto-removed clrscr */');
+                patched = patched.replace(/getch\(\)\s*;/gi, 'getchar();');
+                patched = patched.replace(/void\s+main\s*\(/gi, 'int main(');
+                return patched;
+            }
+            return code;
+        }
+
+        async function runCode() {
+            const lang = document.getElementById('language-select').value;
+            
+            if (lang === 'html') {
+                updateLivePreview();
+                return;
+            }
+
+            const rawCode = editor.getValue();
+            const patchedCode = patchTextbookCode(rawCode, lang);
+            
+            const consolePre = document.getElementById('console-output');
+            const loading = document.getElementById('loading-spinner');
+            
+            consolePre.innerText = "";
+            loading.style.display = "block";
+
+            const payload = {
+                language: lang,
+                version: "*",
+                files: [{ content: patchedCode }]
+            };
+
+            try {
+                const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                const result = await response.json();
+                loading.style.display = "none";
+
+                if (result.run && result.run.output) {
+                    consolePre.innerText = result.run.output;
+                } else if (result.message) {
+                    consolePre.innerText = "Error: " + result.message;
+                } else {
+                    consolePre.innerText = "Program exited with no output.";
+                }
+
+            } catch (err) {
+                loading.style.display = "none";
+                consolePre.innerText = "Error connecting to compile server. Check your internet connection.";
+            }
+        }
+    </script>
+</body>
+</html>
