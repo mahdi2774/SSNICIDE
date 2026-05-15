@@ -353,6 +353,7 @@
             }
 
             const rawCode = editor.getValue();
+            // Your patcher perfectly converts textbook C (void main) to standard C (int main)
             const patchedCode = patchTextbookCode(rawCode, lang);
             
             const consolePre = document.getElementById('console-output');
@@ -361,14 +362,19 @@
             consolePre.innerText = "";
             loading.style.display = "block";
 
+            // 1. Map languages to Wandbox API compilers
+            const compilerName = lang === 'c' ? 'gcc-head-c' : 'cpython-head';
+
+            // 2. Prepare the Wandbox Payload
             const payload = {
-                language: lang,
-                version: "*",
-                files: [{ content: patchedCode }]
+                compiler: compilerName,
+                code: patchedCode,
+                save: false
             };
 
             try {
-                const response = await fetch('https://emkc.org/api/v2/piston/execute', {
+                // 3. Send request to the free Wandbox execution API
+                const response = await fetch('https://wandbox.org/api/compile.json', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(payload)
@@ -377,17 +383,18 @@
                 const result = await response.json();
                 loading.style.display = "none";
 
-                if (result.run && result.run.output) {
-                    consolePre.innerText = result.run.output;
-                } else if (result.message) {
-                    consolePre.innerText = "Error: " + result.message;
+                // 4. Handle Compile Errors (C++) or Execution Output (Python/C++)
+                if (result.compiler_error) {
+                    consolePre.innerText = "Compiler Error:\n" + result.compiler_error;
+                } else if (result.program_message) {
+                    consolePre.innerText = result.program_message;
                 } else {
                     consolePre.innerText = "Program exited with no output.";
                 }
 
             } catch (err) {
                 loading.style.display = "none";
-                consolePre.innerText = "Error connecting to compile server. Check your internet connection.";
+                consolePre.innerText = "Error connecting to compile server. Check your internet connection or try again later.";
             }
         }
     </script>
