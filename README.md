@@ -1,6 +1,9 @@
-NOTE🗒️: আপনার keyboard টা google keyboard, microsoft keyboard, Hackers keyboard etc তে সুইচ করতে হবে কারণ আমার app এ Ridmik Keyboard টা ভালো ভাবে কাজ করে। অন্যান্য সবগুলোই খুব ভালোভাবে কাজ করে
+NOTE 🗒️: Please switch your keyboard to Google Keyboard, Microsoft Keyboard, Hacker's Keyboard, etc. Because Ridmik Keyboard does not work properly in my app. All other keyboards work perfectly fine. [আপনার keyboard টা google keyboard, microsoft keyboard, Hackers keyboard etc তে সুইচ করতে হবে কারণ আমার app এ Ridmik Keyboard টা ভালো ভাবে কাজ করে। অন্যান্য সবগুলোই খুব ভালোভাবে কাজ করে]
 
-#যদি app আকারে ব্যাবহার করতে চাউ তাহলে ডানে বা নিছে দেখো releases লেখা এর নিছে APK version of SSNICIDE লেখা আছে এইটাতে ক্লিক করো তারপর দেখ Assets লেখা আছে এর নিছে _SSNICIDE_19783923.apk লেখা আছে এইখানে ক্লিক করলেই app download হইতে শুরু করবে পরে install করে নিয়ো । আড় কুনো প্রব্লেম হইলে আমাকে https://wa.me/+8801979841739 এইটা আমার whatssapp আইডি এখানে জোগাজোগ কড়তে পারো । আর পারলে একটা স্টার দিয়ে দিতে পারো তাহলে অনেক উপকার হবে । আড় যদি pc তে বা leptop এ ব্যাবহার করতে চাউ তাহলে নিছে দেখ ওয়েবসাইট এর লিঙ্ক দেয়া আছে ।
+⚙️If you want to use it as an app, look to the right or bottom of the page and find the "Releases" section. Click on "APK version of SSNICIDE", then expand the "Assets" section and click on "SSNICIDE_signed.apk" to start the download. Once downloaded, you can install it on your device.
+If you face any issues, feel free to contact me on WhatsApp at https://wa.me/+8801979841739. Also, if you like the project, please give it a Star ⭐—it would be a great help!
+If you want to use it on a PC or laptop, the website link is provided below.
+[যদি app আকারে ব্যাবহার করতে চাউ তাহলে ডানে বা নিছে দেখো releases লেখা এর নিছে APK version of SSNICIDE লেখা আছে এইটাতে ক্লিক করো তারপর দেখ Assets লেখা আছে এর নিছে SSNICIDE_signed.apk লেখা আছে এইখানে ক্লিক করলেই app download হইতে শুরু করবে পরে install করে নিয়ো । আড় কুনো প্রব্লেম হইলে আমাকে https://wa.me/+8801979841739 এইটা আমার whatssapp আইডি এখানে জোগাজোগ কড়তে পারো । আর পারলে একটা স্টার দিয়ে দিতে পারো তাহলে অনেক উপকার হবে । আড় যদি pc তে বা leptop এ ব্যাবহার করতে চাউ তাহলে নিছে দেখ ওয়েবসাইট এর লিঙ্ক দেয়া আছে ।]
 
 # SSNICIDE
 A gift from me only for SSNICIAN.
